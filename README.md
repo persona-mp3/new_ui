@@ -1,4 +1,4 @@
- When you start this projct, first make sure you have MySQL properly configured on your destop
+
 
  First execute the sql commands as seen in the schema.session.sql file
 
@@ -8,15 +8,7 @@
 
  After all that, run the following commnaand in the integrated terminal
 
- --npm install--
-
- This will install all package dependencies for the project. 
- None are harmful or contain virsuses. You can ignore warnings unless its a patch.
-
-
-After all packages have been installed the node_modules folder should appear in the same directory under 'node_modules'
-
-After that execute the folowing command inside the integrated terminal
+ --npm install-- This will install all package dependencies for the project. None are harmful or contain virsuses. You can ignore warnings unless its a patch. After all packages have been installed the node_modules folder should appear in the same directory under 'node_modules' After that execute the folowing command inside the integrated terminal
 
 -- npm run server --
 
@@ -51,4 +43,10 @@ SUMMARY
 
  
 
- 
+![alt text](image.png) 
+
+
+![alt text](image-1.png)
+
+![alt text](image-2.png)
+
