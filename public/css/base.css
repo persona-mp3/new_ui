@@ -52,6 +52,7 @@ button, .sec-link {
 .cta-btn:hover, .cta-link:hover {
   background-color: rgb(16, 141, 199);
   color: white;
+  cursor: pointer;
   transition: all ease 0.5s;
 }
 

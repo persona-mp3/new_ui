@@ -177,7 +177,6 @@ async function updateUserPass() {
 }
 // await saveUser(userCred)
 
-
 async function promptPassword(userId) {
     const newPass = input('Please update your password > ');
     let hashedPass = await bcrypt.hash(newPass, 13)
