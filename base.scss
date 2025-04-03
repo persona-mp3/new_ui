@@ -211,3 +211,58 @@ main {
     background-position: 500% 50%;
     transition: $transition;
 }
+
+
+
+.newsletter {
+    margin-top: 2%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    background: linear-gradient(to bottom, rgb(33, 97, 81),rgb(12, 77, 60));
+    // border-top-left-radius: .8rem; 
+    // border-top-right-radius: .8rem;
+    border-radius: .8rem;
+    color: white;
+    padding: 10rem;
+    transition: $transition;
+
+
+    h4 {
+        font-size: 1.95rem;
+        width: fit-content;
+        margin: 0 auto;
+    }   
+
+
+    p {
+        width: 55%;
+        text-align: center;
+        margin: 0 auto;
+    }
+
+    .form-container {
+        display: flex;
+        width: 50%;
+        justify-content: center;
+        gap: 2rem;
+
+
+        input {
+            border: 0;
+            border-bottom: 2px solid lightcoral;
+            width: 80%;
+            font-size: 1.24rem;
+            border-radius: .2rem;
+            border: 2px solid white;
+            padding: .4rem;
+        }
+    }
+}
+
+.newsletter:hover {
+    box-shadow: 0rem .11rem 2rem rgb(28, 206, 161);
+    transition: $transition
+}

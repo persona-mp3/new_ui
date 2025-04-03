@@ -269,3 +269,47 @@ main {
   background-position: 500% 50%;
   transition: all ease 0.5s;
 }
+
+.newsletter {
+  margin-top: 2%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(to bottom, rgb(33, 97, 81), rgb(12, 77, 60));
+  border-radius: 0.8rem;
+  color: white;
+  padding: 10rem;
+  transition: all ease 0.5s;
+}
+.newsletter h4 {
+  font-size: 1.95rem;
+  width: fit-content;
+  margin: 0 auto;
+}
+.newsletter p {
+  width: 55%;
+  text-align: center;
+  margin: 0 auto;
+}
+.newsletter .form-container {
+  display: flex;
+  width: 50%;
+  justify-content: center;
+  gap: 2rem;
+}
+.newsletter .form-container input {
+  border: 0;
+  border-bottom: 2px solid lightcoral;
+  width: 80%;
+  font-size: 1.24rem;
+  border-radius: 0.2rem;
+  border: 2px solid white;
+  padding: 0.4rem;
+}
+
+.newsletter:hover {
+  box-shadow: 0rem 0.11rem 2rem rgb(28, 206, 161);
+  transition: all ease 0.5s;
+}
