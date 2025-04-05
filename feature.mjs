@@ -193,9 +193,64 @@ async function promptPassword(userId) {
 }
 
 
+async function validateUserLogin(userCred) {
+  console.log(`[This function tests login functioality]`)
+  let email = input('Enter your email address --> ')
+  let password = input('Enter your password --> ')
+  
+  if (password.trim() === '') {
+    console.log('Empty value passed in')
+    return
+  }
+  
+  let query = `select id, email, password, first_login from bookings where email = (?)`
+  try {
+    const [response] = await pool.query(query, email);
+    if (response.length === 0) {
+      console.log('No user with that email found')
+      return;
+    }
 
 
+    // use bcrypt.compare to validate passwords
+    let dbResponse = response[0];
+
+    let isValid = await bcrypt.compare(password, dbResponse.password);
+
+    if (!isValid) {
+      console.log('Invalid Cred');
+      return
+    }
+
+    console.log('User Authenticated -->', isValid)
+    console.log(dbResponse)
+    
 
 
-await saveUser(userCred)
-await updateUserPass()
+    let [getUserData] = await pool.query(`select * from bookings where id = (?)`, dbResponse.id)
+
+    console.log('All users information')
+    console.log(getUserData[0]);
+
+
+    const userData = getUserData[0]
+    let uiData = {}
+    uiData.name = userData.firstName + ' ' + userData.lastName
+    uiData.address = userData.address;
+    uiData.postcode = userData.postcode;
+    uiData.type = userData.type;
+    uiData.date = `Scheduled On: ${new Date(userData.date).toLocaleDateString()}`
+    
+    console.log(`--------------`)
+    console.log('Render uiData')
+    console.log(uiData)
+  } catch(err) {
+    throw err
+  }
+  // use bcypt.comapre to comapre stored password and hashedPassword
+  
+}
+
+await validateUserLogin(userCred)
+//await saveUser(userCred)
+//await updateUserPass()
