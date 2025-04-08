@@ -1,6 +1,6 @@
 const dataPlaceholders = document.querySelectorAll('.uiData');
 async function getUserData() {
-    let endpoint = new URL(`http://localhost:8080/api/userData`);
+    let endpoint = new URL(`http://localhost:8080/api/data`);
     try {
         const response = await fetch(endpoint, {
             method: 'get',
@@ -26,13 +26,18 @@ async function getUserData() {
     }
 }
 function renderUI(userData) {
-    let userName = userData.name;
-    const address = userData.address;
-    const postcode = userData.postcode;
+    const userName = `${userData.firstName} ${userData.lastName}`;
+    const address = `Location: ${userData.address} | Postcode: ${userData.postcode}`;
     const type = userData.type;
     const date = userData.date;
     const email = userData.email;
-    const dataArray = [userName, address, postcode, type, date, email];
+    const dateConfig = {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit'
+    };
+    const transformedDate = new Date(date).toLocaleDateString('en-GB', dateConfig);
+    const dataArray = [userName, email, address, type, transformedDate];
     dataPlaceholders.forEach((placeholder, i) => {
         placeholder.innerText = dataArray[i];
     });

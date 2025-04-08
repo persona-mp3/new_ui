@@ -39,6 +39,11 @@ async function getFormData(form) {
     // iterate through form data and save to hashMap
     for (let [key, value] of formData.entries()){
         console.log(value)
+
+        if (value.trim() === '') {
+            alert('Empty feild at -->', key)
+            return
+        }
         userData[key] = value
     }
 
@@ -70,13 +75,10 @@ async function getFormData(form) {
             body: payload
         });
 
-        if (response.status === 500) {
-            alert('A server error has occured, please try again later');
-            return;
-        }
+        const data = await response.json()
 
-        if(response.status === 405) {
-            alert('Some fields were left empty');
+        if (response.status !== 200) {
+            alert(data.message)
             return;
         }
 

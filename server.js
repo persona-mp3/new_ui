@@ -8,8 +8,9 @@ import {dirname} from 'path'
 import {fileURLToPath } from 'url'
 
 
-import {saveBooking, validateUser} from './tools.js';
-
+// import {saveBooking, validateUser} from './tools.js';
+import {saveBookingTS} from './controllers/SaveBooking.js'
+import {AuthUser} from './controllers/AuthUser.js'
 dotenv.config()
 
 const app = express()
@@ -39,7 +40,10 @@ app.use(session({
 
 
 app.use(express.json())
-app.set('view engine', 'ejs')
+app.set('view engine', 'ejs');
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(__dirname, 'js')))
+app.use(express.static(path.join(__dirname, 'assets')))
 app.use(morgan('dev'))
 app.use(express.urlencoded({extended: true}));
 
@@ -47,26 +51,52 @@ const PORT = process.env.PORT || 3000;
 
 
 // Routing for different enpoints
-// The dashboard pages makes use of an engine template as dynamic data specific to the user will be displayed
-// when the login successfully, their details will be passed and accessed via the cookies
+// The dashboard pages makes use of an engine template as dynamic data specific to the user will be displayed when the login successfully, their details will be passed and accessed via the cookies
+app.get('/index', async (req, res) => {
+    res.status(200).render('index')
+})
+
+app.get('/booking', async (req, res) => {
+    res.status(200).render('booking')
+}) 
+
+app.get('/login', async (req, res) => {
+    res.status(200).render('login')
+})
+
+
+app.get('/logout', async (req, res) => {
+    req.session.destroy();
+    // console.log('session destroyed')
+    res.render('index')
+})
+
 
 app.get('/dashboard', async (req, res) => {
     console.log('dashboard api endpoint')
-    console.log('after redirect -->', req.session.id)
+    console.log('after redirect -->', req.session.user)
     res.status(200).render('dashboard')
 })
 
 
 app.post('/booking', async (req, res) => {
-    console.log(req.body)
     let userData = req.body
-    let response = await saveBooking(res, userData) 
+    try { 
+        let response = await saveBookingTS(req, res, userData)
+
+    }catch (err) {
+        throw err
+    }
+})
+
+app.get('/api/data', async (req, res) => {
+    res.json({msg: req.session.user})
 })
 
 
 app.post('/login', async (req, res) => {
     let loginCred = req.body
-    let response = await validateUser(res, loginCred, req)
+    let response = await AuthUser(req, res, loginCred)
 })
 
 app.listen(PORT, () => {
