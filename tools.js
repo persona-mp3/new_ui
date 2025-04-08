@@ -1,6 +1,7 @@
 // let this function take the req, and res parameters too
 import mysql from 'mysql2'
 import dotenv from 'dotenv'
+import bcrypt from 'bcrypt'
 dotenv.config()
 
 let sqlConfig = {
@@ -68,7 +69,7 @@ export async function validateUser(res, userCred) {
         return;
     }
 
-    let query = `select email, password, first_login from bookings where email = (?)`;
+    let query = `select id, email, password, first_login from bookings where email = (?)`;
 
     try { 
         const [response] = await pool.query(query, email)
@@ -80,22 +81,63 @@ export async function validateUser(res, userCred) {
         
         let dbCred = response[0];
         console.log(dbCred)
-        // do a password check since they are both in plain strings.
-        if (tempPass !== dbCred.password) {
-            res.status(402).send({msg: 'Invalid Credntials'})
+
+        const isPassValid = bcrypt.compare(tempPass, dbCred.password)
+        if (!isPassValid) {
+            const msg = {
+                statusCode: 401,
+                reason: "Invalid Credentials",
+            }
+            res.status(401).json(msg)
             return;
         }
-
-        // MySQL returns boolean as 1 and 0 
-        // 1 is true and 0 is false
-        if (dbCred.first_login !== undefined && dbCred.first_login === 1) {
+        
+        console.log('Login successful')
+        await sendUIData(res, dbCred.id)
+        return dbCred.id
+        // MySQL returns boolean as 1 and 0 1 is true and 0 is false
+/*         if (dbCred.first_login !== undefined && dbCred.first_login === 1) {
             console.log('The user can now change their password since firstLogin is defined');
-            res.status(300).send({msg: "Reditect user to change password"})
+            res.status(201).send({msg: "Reditect user to change password"})
             return;
         }
 
         console.log('User Authorised, Prompt to change password now')
+  */       // but for now lets just redirect them to the dashboard 
+ 
+        // do a password check since they are both in plain strings.
+/*         if (tempPass !== dbCred.password) {
+            res.status(402).send({msg: 'Invalid Credntials'})
+            return;
+        }
+ */       // so they can see their current booking and past bookings
     } catch (err) {
         throw err
     }
 }
+
+
+async function sendUIData(res, userId) {
+    let query = `
+                select firstName, lastName, address,
+                email, type, date, time from bookings
+                where id=(?)
+    `
+    
+
+    try { 
+        const [dbResponse] = await pool.query(query, userId);
+        const userCreds = dbResponse[0];
+        if (userCreds === undefined){
+            console.log('Unexpected Error')
+            res.status(500).send({msg: "Unexpected Error"})
+        }
+        
+        res.status(200).json({msg: userCreds})
+        console.log(userCreds)
+    } catch (err) {
+        throw err
+    }
+}
+
+// await sendUIData(3)

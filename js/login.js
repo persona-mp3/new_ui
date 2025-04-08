@@ -1,6 +1,6 @@
 const loginForm = document.getElementById('loginForm');
 
-async function sendData(loginFrom){
+export async function sendData(loginFrom){
     let formData = new FormData(loginForm)
     const userCred = {}
 
@@ -30,12 +30,21 @@ async function sendData(loginFrom){
         const data = await response.json();
         const msg = data.msg
 
-        if (msg !== undefined) {
+/*         if (msg !== undefined) {
             console.log(msg)
         } else {
             console.log('msg is undefined')
         }
-
+ */
+        
+        if (response.status !== 200) {
+            alert('Invalid Credentials')
+            return
+        }
+        
+        alert('Valid login, redirect user to dashboard')
+        console.log(msg)
+        return msg
     } catch(err) {
         throw err
     }

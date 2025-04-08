@@ -18,6 +18,20 @@ app.use(morgan('dev'))
 app.use(express.urlencoded({extended: true}));
 
 const PORT = process.env.PORT || 3000;
+app.get('/api/userData', async (req, res) => {
+    res.set("Content-Type", "application/json")
+    let uiData = {
+        name: "John Mayer",
+        address: "Welcome to Costco",
+        email: "johnmayerdeeznuts@gmail.com",
+        postcode: "FY2 9FR",
+        type: "DEEZ NUTS",
+        date: "August 23, 2025"
+    }
+    
+    res.status(200).json({msg: uiData})
+})
+
 
 app.post('/booking', async (req, res) => {
     console.log(req.body)
@@ -30,6 +44,19 @@ app.post('/login', async (req, res) => {
     let loginCred = req.body
     let response = await validateUser(res, loginCred)
 })
+/* 
+app.get('api/userData', async (req, res) => {
+    res.set("Content-Type", "application/js")
+    let uiData = {
+        name: "John Mayer",
+        address: "Welcome to Costco",
+        postcode: "FY2 9FR",
+        type: "DEEZ NUTS",
+        date: "August 23, 2025"
+    }
+    
+    res.status(200).json({msg: uiData})
+}) */
 
 app.listen(PORT, () => {
     console.log(`[LISTENING....] on port ${PORT}`)
