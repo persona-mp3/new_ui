@@ -6,7 +6,7 @@ async function getUserData() {
             method: 'get',
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
         });
         const serverData = await response.json();
         const data = serverData.msg;
