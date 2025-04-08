@@ -23,13 +23,14 @@ export async function sendData(loginFrom){
             headers: {
                 "Content-Type": "application/json"
             },
+            credentials: 'include',
             body: payload
         })
 
 
-        const data = await response.json();
+/*         const data = await response.json();
         const msg = data.msg
-
+ */
 /*         if (msg !== undefined) {
             console.log(msg)
         } else {
@@ -43,8 +44,8 @@ export async function sendData(loginFrom){
         }
         
         alert('Valid login, redirect user to dashboard')
-        console.log(msg)
-        return msg
+        // console.log(msg)
+        // return msg
     } catch(err) {
         throw err
     }

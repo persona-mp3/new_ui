@@ -22,7 +22,8 @@ async function getUserData(): Promise<UserInfo | void> {
             method: 'get',
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            
         })
         
 

@@ -37,6 +37,7 @@ let firstName = userData.firstName;
     }
 
     let saveQuery = `INSERT INTO bookings 
+    
                     (firstName, lastName, email, address,
                     postcode, type, date, time, password
                     )
@@ -60,7 +61,7 @@ let firstName = userData.firstName;
 // if true, it prompts the frontend to change their password before commencing
 
 
-export async function validateUser(res, userCred) {
+export async function validateUser(res, userCred, req) {
     let email = userCred.email;
     let tempPass = userCred.password;
 
@@ -80,9 +81,10 @@ export async function validateUser(res, userCred) {
         }
         
         let dbCred = response[0];
-        console.log(dbCred)
+        
 
-        const isPassValid = bcrypt.compare(tempPass, dbCred.password)
+        const isPassValid = await bcrypt.compare(tempPass, dbCred.password)
+
         if (!isPassValid) {
             const msg = {
                 statusCode: 401,
@@ -91,9 +93,8 @@ export async function validateUser(res, userCred) {
             res.status(401).json(msg)
             return;
         }
-        
         console.log('Login successful')
-        await sendUIData(res, dbCred.id)
+        await sendUIData(res, dbCred.id, req)
         return dbCred.id
         // MySQL returns boolean as 1 and 0 1 is true and 0 is false
 /*         if (dbCred.first_login !== undefined && dbCred.first_login === 1) {
@@ -117,7 +118,7 @@ export async function validateUser(res, userCred) {
 }
 
 
-async function sendUIData(res, userId) {
+async function sendUIData(res, userId, req) {
     let query = `
                 select firstName, lastName, address,
                 email, type, date, time from bookings
@@ -128,16 +129,17 @@ async function sendUIData(res, userId) {
     try { 
         const [dbResponse] = await pool.query(query, userId);
         const userCreds = dbResponse[0];
+
         if (userCreds === undefined){
             console.log('Unexpected Error')
             res.status(500).send({msg: "Unexpected Error"})
+            return
         }
         
-        res.status(200).json({msg: userCreds})
-        console.log(userCreds)
+        req.session.user = {name: "Killer Quin"} 
+        console.log('before redirect -->', req.session.id)
+        res.status(200).redirect('/dashboard')
     } catch (err) {
         throw err
     }
 }
-
-// await sendUIData(3)

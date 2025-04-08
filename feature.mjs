@@ -251,6 +251,6 @@ async function validateUserLogin(userCred) {
   
 }
 
-await validateUserLogin(userCred)
+// await validateUserLogin(userCred)
 //await saveUser(userCred)
 //await updateUserPass()
