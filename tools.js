@@ -120,7 +120,7 @@ export async function validateUser(res, userCred, req) {
 
 async function sendUIData(res, userId, req) {
     let query = `
-                select firstName, lastName, address,
+                select firstName, lastName, address,postcode,
                 email, type, date, time from bookings
                 where id=(?)
     `
@@ -136,9 +136,10 @@ async function sendUIData(res, userId, req) {
             return
         }
         
-        req.session.user = {name: "Killer Quin"} 
+        req.session.user = userCreds
         console.log('before redirect -->', req.session.id)
-        res.status(200).redirect('/dashboard')
+
+        res.redirect('/dashboard')
     } catch (err) {
         throw err
     }

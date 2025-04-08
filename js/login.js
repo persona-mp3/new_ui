@@ -44,7 +44,10 @@ export async function sendData(loginFrom){
         }
         
         alert('Valid login, redirect user to dashboard')
-        // console.log(msg)
+        // redirect user to the dashboard page, using ressponse.url
+        // as the response object contains the url property
+        location.href = response.url
+        console.log(response)
         // return msg
     } catch(err) {
         throw err

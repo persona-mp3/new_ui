@@ -1,12 +1,13 @@
 const dataPlaceholders: HTMLParagraphElement | any = document.querySelectorAll('.uiData')
 
 interface UserInfo {
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string,
     address: string,
     postcode: string,
     type: string,
-    date: string
+    date: string | Date
 }
 
 interface ServerData {
@@ -15,7 +16,7 @@ interface ServerData {
 
 
 async function getUserData(): Promise<UserInfo | void> {
-    let endpoint: URL = new URL(`http://localhost:8080/api/userData`);
+    let endpoint: URL = new URL(`http://localhost:8080/api/data`);
 
     try {
         const response: Response = await fetch(endpoint, {
@@ -49,14 +50,19 @@ async function getUserData(): Promise<UserInfo | void> {
 
 function renderUI(userData: UserInfo): void{
 
-    let userName = userData.name
-    const address = userData.address;
-    const postcode = userData.postcode;
+    const userName = `${userData.firstName} ${userData.lastName}`
+    const address = `Location: ${userData.address} | Postcode: ${userData.postcode}`;
     const type = userData.type;
     const date = userData.date;
     const email = userData.email;
-    
-    const dataArray: string[] = [userName, address, postcode, type, date, email]
+
+    const dateConfig: Intl.DateTimeFormatOptions = {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit'
+    } 
+    const transformedDate = new Date(date).toLocaleDateString('en-GB', dateConfig)
+    const dataArray: string[] = [userName, email,  address, type, transformedDate]
     
     dataPlaceholders.forEach((placeholder: HTMLParagraphElement, i: number) => {
         placeholder.innerText = dataArray[i]
