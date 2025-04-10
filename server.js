@@ -11,6 +11,7 @@ import {fileURLToPath } from 'url'
 // import {saveBooking, validateUser} from './tools.js';
 import {saveBookingTS} from './controllers/SaveBooking.js'
 import {AuthUser} from './controllers/AuthUser.js'
+import {CheckCookie} from './controllers/DashboardAuth.js'
 dotenv.config()
 
 const app = express()
@@ -30,7 +31,7 @@ app.use(session({
     resave: false,
     cookie: {
         httpOnly: true,
-        maxAge: 6000*60,
+        maxAge: 60*60,
         sameSite: 'lax',
         secure: false,
         signed: true
@@ -53,6 +54,7 @@ const PORT = process.env.PORT || 3000;
 // Routing for different enpoints
 // The dashboard pages makes use of an engine template as dynamic data specific to the user will be displayed when the login successfully, their details will be passed and accessed via the cookies
 app.get('/index', async (req, res) => {
+    req.session.destroy()
     res.status(200).render('index')
 })
 
@@ -67,15 +69,13 @@ app.get('/login', async (req, res) => {
 
 app.get('/logout', async (req, res) => {
     req.session.destroy();
-    // console.log('session destroyed')
-    res.render('index')
+    res.redirect('index')
 })
 
 
 app.get('/dashboard', async (req, res) => {
-    console.log('dashboard api endpoint')
-    console.log('after redirect -->', req.session.user)
-    res.status(200).render('dashboard')
+    await CheckCookie(req, res)
+
 })
 
 
@@ -90,12 +90,13 @@ app.post('/booking', async (req, res) => {
 })
 
 app.get('/api/data', async (req, res) => {
+   
     res.json({msg: req.session.user})
 })
 
 
 app.post('/login', async (req, res) => {
-    let loginCred = req.body
+    const loginCred = req.body
     let response = await AuthUser(req, res, loginCred)
 })
 

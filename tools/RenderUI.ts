@@ -1,10 +1,15 @@
 import {pool, bcrypt, Request, Response} from './globals.js';
+import {CheckCookie} from './DashboardAuth.js'
+import dotenv from 'dotenv'
 import session from 'express-session';
 
+
+dotenv.config()
 // allow express session to allow you add modifications to the cookie
 declare module 'express-session' {
     interface SessionData {
         user?: any
+        loginKey?:any
     }
 }
 
@@ -45,7 +50,10 @@ export async function RenderUI(req: Request, res: Response, userId: number): Pro
         const userCookie = req.session
         // const modCookie = userCookie.user
         userCookie.user = userData
-        res.status(302).redirect('/dashboard')
+        userCookie.loginKey = process.env.LOGIN_KEY
+        res.redirect('/dashboard')
+        
+        // await CheckCookie(req, res)
         // req.session.user = userData
         
         

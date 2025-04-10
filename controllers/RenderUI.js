@@ -1,4 +1,6 @@
 import { pool } from './globals.js';
+import dotenv from 'dotenv';
+dotenv.config();
 export async function RenderUI(req, res, userId) {
     const query = `
                     select firstName, lastName, address, postcode,
@@ -18,7 +20,9 @@ export async function RenderUI(req, res, userId) {
         const userCookie = req.session;
         // const modCookie = userCookie.user
         userCookie.user = userData;
-        res.status(302).redirect('/dashboard');
+        userCookie.loginKey = process.env.LOGIN_KEY;
+        res.redirect('/dashboard');
+        // await CheckCookie(req, res)
         // req.session.user = userData
     }
     catch (err) {

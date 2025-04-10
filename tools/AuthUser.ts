@@ -58,11 +58,8 @@ export async function AuthUser(req: Request, res: Response, userCred: UserCred) 
 
 
         console.log('User Authenticated')
-        // res.status(303).send({msg: "User Authenticated"})
-        // call dashbaord api to send data
         await RenderUI(req, res, firstAuth.id)
         return
-        // if (response.length )
 
     } catch (err) {
         console.log(err)
